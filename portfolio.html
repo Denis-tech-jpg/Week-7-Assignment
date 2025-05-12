@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photography Animation Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: var(--bg-color, #f0f0f0);
+      color: var(--text-color, #000);
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .dark-theme {
+      --bg-color: #222;
+      --text-color: #ffffff;
+    }
+
+    .welcome {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #088b9c;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .dark-theme .welcome {
+      background-color: #333;
+      color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .photo-box {
+      width: 200px;
+      height: 200px;
+      margin: 40px auto;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .animate-photo {
+      animation: zoomPhoto 1s ease-in-out;
+    }
+
+    @keyframes zoomPhoto {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: rgb(8, 117, 141);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: dodgerblue;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to My Photography Portfolio</h1>
+  <input type="text" id="nameInput" placeholder="Enter your name" />
+  <button onclick="saveName()">Save Name</button>
+  <button onclick="toggleTheme()">Toggle Theme</button>
+
+  <div id="welcomeBox" class="welcome" style="display: none;"></div>
+
+  <div class="photo-box" id="photoBox">
+    <img src="Denis.jpg" alt="Sample Photograph">
+  </div>
+  <button onclick="triggerAnimation()">Highlight Photo</button>
+
+  <script>
+    // Show welcome message and apply saved theme
+    window.onload = function() {
+      const name = localStorage.getItem('userName');
+      const theme = localStorage.getItem('theme');
+      if (name) {
+        const welcomeBox = document.getElementById('welcomeBox');
+        welcomeBox.textContent = `Welcome back to your gallery, ${name}!`;
+        welcomeBox.style.display = 'block';
+      }
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+      }
+    };
+
+    // Save name to localStorage
+    function saveName() {
+      const name = document.getElementById('nameInput').value;
+      if (name) {
+        localStorage.setItem('userName', name);
+        location.reload();
+      } else {
+        alert("Please enter your name.");
+      }
+    }
+
+    // Trigger photo animation
+    function triggerAnimation() {
+      const photoBox = document.getElementById('photoBox');
+      photoBox.classList.remove('animate-photo');
+      void photoBox.offsetWidth; // trigger reflow to restart animation
+      photoBox.classList.add('animate-photo');
+    }
+
+    // Toggle between light and dark themes
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark-theme');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>
